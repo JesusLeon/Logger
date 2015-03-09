@@ -1,0 +1,24 @@
+{
+  "name": "jesus-leon/logger",
+  "type": "library",
+  "description": "A small practical wrapper for Monolog",
+  "keywords": ["log","logging","logger"],
+  "homepage": "http://github.com/JesusLeon/logger",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Jesus Leon",
+      "email": "_dev@jes.mx",
+      "homepage": "http://iamjessu.com",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "monolog/monolog": "~1.12"
+  },
+  "autoload": {
+    "psr-4": {
+      "Logger\\": "src/Logger"
+    }
+  }
+}
