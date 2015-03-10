@@ -215,7 +215,7 @@ class Logger {
      * @param $length
      * @param int $offset
      */
-    protected function setBacktraceLength($length, $offset=0)
+    public function setBacktraceLength($length, $offset=0)
     {
         $this->backtrace_length = $length;
 
