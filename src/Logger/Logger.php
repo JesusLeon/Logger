@@ -11,21 +11,25 @@ class Logger {
 
     public $monolog;
 
-    private $logger_name = 'Logger';
+    protected $logger_name = 'Logger';
 
-    private $stream_name = 'logger.log';
+    protected $stream_name = 'logger.log';
 
-    private $hipchat_room = 'Logger_Room';
+    protected $hipchat_room = 'Logger_Room';
 
-    private $hipchat_token = '';
+    protected $hipchat_token = '';
 
-    private $backtrace = array();
+    protected $backtrace = array();
 
-    private $mail_recipients = array();
+    protected $mail_recipients = array();
 
-    private $mail_subject = "Logger";
+    protected $mail_subject = "Logger";
 
-    private $mail_sender = "logger@example.com";
+    protected $mail_sender = "logger@example.com";
+
+    private $backtrace_length = null;
+
+    private $backtrace_offset = 0;
 
     /**
      * @param null $logger_name
@@ -61,7 +65,7 @@ class Logger {
     /**
      * Create Monolog instance.
      */
-    private function instantiate()
+    protected function instantiate()
     {
         $this->monolog = new Monolog($this->logger_name);
     }
@@ -69,7 +73,7 @@ class Logger {
     /**
      * Set the logging channels.
      */
-    private function pushHandlers()
+    protected function pushHandlers()
     {
         $this->monolog->pushHandler(new StreamHandler($this->stream_name, Monolog::DEBUG));
 
@@ -192,21 +196,30 @@ class Logger {
     /**
      * Add small debugging information.
      */
-    private function setBacktrace()
+    protected function setBacktrace()
     {
         $trace  = debug_backtrace();
 
-        if(isset($trace[2]['file']))
-            $this->backtrace['_backtrace_level_2'] = $trace[2]['file'] .':'. $trace[2]['line'];
+        $this->backtrace_length = ! is_null($this->backtrace_length) ? $this->backtrace_length : count($trace)-1;
 
-        if(isset($trace[3]['file']))
-            $this->backtrace['_backtrace_level_3'] = $trace[3]['file'] .':'. $trace[3]['line'];
+        $this->backtrace = array();
 
-        if(isset($trace[4]['file']))
-            $this->backtrace['_backtrace_level_4'] = $trace[4]['file'] .':'. $trace[4]['line'];
+        for($i = $this->backtrace_offset; $i < $this->backtrace_offset + $this->backtrace_length; $i++)
+        {
+            if(isset($trace[$i]['file']))
+                $this->backtrace['_backtrace_level_' . $i] = $trace[$i]['file'] .':'. $trace[$i]['line'];
+        }
+    }
 
-        if(isset($trace[5]['file']))
-            $this->backtrace['_backtrace_level_5'] = $trace[5]['file'] .':'. $trace[5]['line'];
+    /**
+     * @param $length
+     * @param int $offset
+     */
+    protected function setBacktraceLength($length, $offset=0)
+    {
+        $this->backtrace_length = $length;
+
+        $this->backtrace_offset = $offset;
     }
 
 }
