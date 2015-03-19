@@ -1,2 +1,2 @@
-# logger
-A small practical wrapper for Monolog
+# Logger
+A practical logging wrapper for Monolog.
